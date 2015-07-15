@@ -1,7 +1,11 @@
 <?php
 
+/**
+ * Class SproutConfigParser
+ *
+ * Parses a text file containing configuration settings
+ */
 class SproutConfigParser {
-
 
     private $configValues = [];
 
@@ -26,23 +30,40 @@ class SproutConfigParser {
 
             $value = trim($parts[1]);
 
+            // convert to boolean if appropriate
             if ($value == 'on' || $value == 'true' || $value == 'yes') {
                 $value = true;
             } else if ($value == 'off' || $value == 'false' || $value == 'no') {
                 $value = false;
             }
+            // convert to int or float
             else if (preg_match('/^\d+$/', $value) == 1) {
-                echo 'int';
                 $value = intval($value);
             } else if (preg_match('/^[\d\.]+$/', $value)) {
-                echo 'float';
                 $value = floatval($value);
             }
 
             $this->configValues[trim($parts[0])] = $value;
-
         }
+    }
 
+    /**
+     * Get a config value
+     * @param $name string Setting name
+     * @return mixed
+     */
+    public function getValue($name) {
+        if (isset($this->configValues[$name])) {
+            return $this->configValues[$name];
+        }
+        return false;
+    }
+
+    /**
+     * Dump all config values
+     */
+    public function dumpValues() {
+        var_dump($this->configValues);
     }
 
 }
